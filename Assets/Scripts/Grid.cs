@@ -12,6 +12,7 @@ public class Grid
 
     private int[,] gridArray;
 
+    // <T>
     public Grid(int width , int height, float cellSize)
     {
         this.width = width;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Building : StateMachineBehaviour
 {
     Builder _builderNPC;
-    static Vector3 _target;
+    Vector3 _target;
     float _buildingTime;
     float _startTime;
     PlaceUnitController puc;
@@ -21,6 +21,13 @@ public class Building : StateMachineBehaviour
         _builderNPC = animator.gameObject.GetComponent<Builder>();
         _buildingTime = _builderNPC.buildingTime;
         _startTime = Time.deltaTime;
+
+        if(_builderNPC.units.Count == 0)
+            _target = WalkToTarget._home;
+        else
+        {
+            _target = _builderNPC.units.Dequeue();
+        }
     }
 
     //OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -40,18 +47,5 @@ public class Building : StateMachineBehaviour
         puc.PlaceObject(_target);
     }
 
-    //TODO : fix this 
-    public static void SetBuildTarget(Vector3 target) => target = _target;
-    
-    // OnStateMove is called right after Animator.OnAnimatorMove()
-    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that processes and affects root motion
-    //}
 
-    // OnStateIK is called right after Animator.OnAnimatorIK()
-    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that sets up animation IK (inverse kinematics)
-    //}
 }

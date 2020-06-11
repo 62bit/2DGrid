@@ -45,7 +45,6 @@ public class PlaceUnitController : MonoBehaviour
                 }
             }
         }
-        Debug.Log(units.Count);
     }
 
     public void PlaceObject(Vector2 pos)

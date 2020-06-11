@@ -15,20 +15,23 @@ public class PlaceUnitController : MonoBehaviour
 
     public static Grid grid;
 
+    private GameObject TreeContainer;
+
     private void Awake()
     {
+        TreeContainer = GameObject.Find("Trees");
         grid = new Grid(64, 64, 1f);
     }
 
     public static void PassToBuilders(List<Vector2> units)
-    { 
+    {
         int unitsPerBuilder = Math.Abs(units.Count / BuilderID.ReturnID());
         int counter = 0;
-        foreach(var builder in GameManager.builders)
+        foreach (var builder in GameManager.builders)
         {
-            if(GameManager.builders.IndexOf(builder)!= GameManager.builders.Count - 1)
+            if (GameManager.builders.IndexOf(builder) != GameManager.builders.Count - 1)
             {
-                for(int i = 0; i < unitsPerBuilder; i++)
+                for (int i = 0; i < unitsPerBuilder; i++)
                 {
                     builder.units.Enqueue(units[counter]);
                     counter++;
@@ -38,7 +41,7 @@ public class PlaceUnitController : MonoBehaviour
             {
                 int lastUnits = units.Count - counter;
 
-                for(int i = 0; i < lastUnits; i++)
+                for (int i = 0; i < lastUnits; i++)
                 {
                     builder.units.Enqueue(units[counter]);
                     counter++;
@@ -49,7 +52,7 @@ public class PlaceUnitController : MonoBehaviour
 
     public void PlaceObject(Vector2 pos)
     {
-        Instantiate(placeableObjectPrefab, pos, Quaternion.identity);
+        var tree = Instantiate(placeableObjectPrefab, pos, Quaternion.identity);
+        tree.transform.SetParent(TreeContainer.transform);
     }
-
 }

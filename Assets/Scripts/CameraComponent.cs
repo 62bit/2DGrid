@@ -23,32 +23,32 @@ public class CameraComponent : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(Input.GetAxis("Mouse ScrollWheel") > 0f)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
         {
-            if(camera.orthographicSize > 3f)
+            if (camera.orthographicSize > 3f)
                 camera.orthographicSize -= 1f;
         }
-        else if(Input.GetAxis("Mouse ScrollWheel") < 0f)
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {
-            if(camera.orthographicSize < 15f)
+            if (camera.orthographicSize < 15f)
                 camera.orthographicSize += 1f;
         }
-        //else if(Input.mousePosition.x >= Screen.width - delta)
-        //{
-        //    transform.position += rightDirection * Time.deltaTime * mouseSpeed;
-        //}
-        //else if(Input.mousePosition.x <= delta)
-        //{
-        //    transform.position += leftDirection * Time.deltaTime * mouseSpeed;
-        //}
-        //else if(Input.mousePosition.y >= Screen.height + -delta)
-        //{
-        //    transform.position += upDirection * Time.deltaTime * mouseSpeed;
-        //}
-        //else if(Input.mousePosition.y <= delta)
-        //{
-        //    transform.position += downDirection * Time.deltaTime * mouseSpeed;
-        //}
+        // else if (Input.mousePosition.x >= Screen.width - delta)
+        // {
+        //     transform.position += rightDirection * Time.deltaTime * mouseSpeed;
+        // }
+        // else if (Input.mousePosition.x <= delta)
+        // {
+        //     transform.position += leftDirection * Time.deltaTime * mouseSpeed;
+        // }
+        // else if (Input.mousePosition.y >= Screen.height + -delta)
+        // {
+        //     transform.position += upDirection * Time.deltaTime * mouseSpeed;
+        // }
+        // else if (Input.mousePosition.y <= delta)
+        // {
+        //     transform.position += downDirection * Time.deltaTime * mouseSpeed;
+        // }
     }
 
 

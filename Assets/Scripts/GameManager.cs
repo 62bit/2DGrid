@@ -7,12 +7,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int BuilderCount;
     [SerializeField] private GameObject BuilderPrefab;
+    private GameObject BuilderContainer;
     public static List<Builder> builders;
     static int count = 0;
     void Awake()
     {
+        BuilderContainer = GameObject.Find("Builders");
         builders = new List<Builder>();
-        for (int i=0; i<BuilderCount; i++)
+        for (int i = 0; i < BuilderCount; i++)
         {
             SpawnBuilder(new Vector2(0f, 0f));
         }
@@ -22,7 +24,8 @@ public class GameManager : MonoBehaviour
     private void SpawnBuilder(Vector2 pos)
     {
         count++;
-        var builder =Instantiate(BuilderPrefab, pos, Quaternion.identity);
+        var builder = Instantiate(BuilderPrefab, pos, Quaternion.identity);
         builder.name = "B" + count.ToString();
+        builder.transform.SetParent(BuilderContainer.transform);
     }
 }

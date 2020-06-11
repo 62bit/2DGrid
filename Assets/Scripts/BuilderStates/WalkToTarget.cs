@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WalkToTarget : StateMachineBehaviour
 {
-    private  Vector3 _target;
+    private Vector3 _target;
     private Builder _builderNPC;
     public static Vector3 _home = new Vector3(0f, 0f, 0f);
 
@@ -15,13 +15,13 @@ public class WalkToTarget : StateMachineBehaviour
         _builderNPC = animator.gameObject.GetComponent<Builder>();
         Debug.Log(_builderNPC.name);
 
-        if(_builderNPC.units.Count == 0)
+        if (_builderNPC.units.Count == 0)
             _target = _home;
         else
         {
             _target = _builderNPC.units.Peek();
         }
-            
+
     }
 
     //OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -30,17 +30,17 @@ public class WalkToTarget : StateMachineBehaviour
         float step = _builderNPC.speed * Time.deltaTime;
         _builderNPC.transform.position = Vector3.MoveTowards(_builderNPC.transform.position, _target, step);
 
-        if(_builderNPC.transform.position == _target & _target != _home)
+        if (_builderNPC.transform.position == _target & _target != _home)
         {
             animator.SetBool("isBuilding", true);
             animator.SetBool("isWalking", false);
         }
-        else if(_builderNPC.transform.position == _home)
+        else if (_builderNPC.transform.position == _home)
         {
             animator.SetBool("isWaiting", true);
             animator.SetBool("isWalking", false);
         }
-            
+
     }
 
     ////OnStateExit is called when a transition ends and the state machine finishes evaluating this state

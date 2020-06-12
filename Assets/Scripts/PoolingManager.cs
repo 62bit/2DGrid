@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 public class PoolingManager : MonoBehaviour
 {
@@ -8,7 +9,9 @@ public class PoolingManager : MonoBehaviour
 
     [SerializeField] private GameObject _block;
     [SerializeField] private GameObject _objectContainer;
-    [SerializeField] private List<GameObject> _listOfObjects;
+    [SerializeField] public List<GameObject> _listOfObjects;
+
+    private int counter = 0;
 
     public static PoolingManager Instance
     {
@@ -24,21 +27,23 @@ public class PoolingManager : MonoBehaviour
     {
         _instance = this;
     }
-    
+
     public void GenerateBlocks(int numberOfBlocks)
     {
-        for(int i= 0; i<numberOfBlocks; i++)
+        for(int i = 0; i < numberOfBlocks; i++)
         {
             var nBlock = Instantiate(_block);
+            nBlock.transform.name = "block " + (++counter).ToString();
             nBlock.transform.SetParent(_objectContainer.transform);
             nBlock.SetActive(false);
             _listOfObjects.Add(nBlock);
         }
-     
+
     }
 
     public GameObject RequestBlock()
     {
+
         foreach(var block in _listOfObjects)
         {
             if(block.activeInHierarchy == false)
@@ -46,8 +51,22 @@ public class PoolingManager : MonoBehaviour
                 block.SetActive(true);
                 return block;
             }
-
         }
-        return null;
+
+        var tBlock = Instantiate(_block);
+        tBlock.transform.name = "block " + (++counter).ToString();
+        tBlock.SetActive(true);
+        tBlock.transform.SetParent(_objectContainer.transform);
+        _listOfObjects.Add(tBlock);
+        return tBlock;
+    }
+
+    public void PutBactToPull(int numberOfBlocks)
+    {
+        //TODO : get blocks according to params then deactive
+        for(int i = 0; i<numberOfBlocks; i++)
+        {
+            _listOfObjects[i].SetActive(false);
+        }
     }
 }

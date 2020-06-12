@@ -42,6 +42,14 @@ public class UnitSelection : MonoBehaviour
         {
             ReleaseSelectionBox();
         }
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            PoolingManager.Instance.RequestBlock();
+        }
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            PoolingManager.Instance.PutBactToPull(5);
+        }
     }
 
     private void StartSelection(Vector2 currentMousePos)

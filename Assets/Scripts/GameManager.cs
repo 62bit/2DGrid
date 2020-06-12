@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int BuilderCount;
     [SerializeField] private GameObject BuilderPrefab;
+    [SerializeField] private int poolObjectCount;
     private GameObject BuilderContainer;
     public static List<Builder> builders;
     static int count = 0;
@@ -18,11 +19,9 @@ public class GameManager : MonoBehaviour
         {
             SpawnBuilder(new Vector2(0f, 0f));
         }
+        PoolingManager.Instance.GenerateBlocks(poolObjectCount);
     }
-    private void Start()
-    {
-        PoolingManager.Instance.GenerateBlocks(5);
-    }
+
     private void SpawnBuilder(Vector2 pos)
     {
         count++;

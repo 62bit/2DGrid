@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public static class BuilderID
@@ -15,6 +11,7 @@ public static class BuilderID
 
     public static int ReturnID() { return ID; }
 }
+
 
 public class Builder : MonoBehaviour
 {

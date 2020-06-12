@@ -19,8 +19,10 @@ public class GameManager : MonoBehaviour
             SpawnBuilder(new Vector2(0f, 0f));
         }
     }
-
-
+    private void Start()
+    {
+        PoolingManager.Instance.GenerateBlocks(5);
+    }
     private void SpawnBuilder(Vector2 pos)
     {
         count++;

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class UnitSelection : MonoBehaviour
 {
+    public static UnityAction StartBuilders;
 
     [SerializeField] private RectTransform SelectionImage;
     private Vector2 startPos;
@@ -13,14 +14,11 @@ public class UnitSelection : MonoBehaviour
     private Stack<GameObject> selectedUnits;
     private PlaceUnitController placeUnitController;
 
-    public static UnityAction StartBuilders;
 
     // Start is called before the first frame update
     void Start()
     {
-        //int testV = 17;
-        //Debug.Log(Math.Abs(17 / 3));
-
+        
         placeUnitController = GameObject.FindWithTag("Placer").GetComponent<PlaceUnitController>();
         selectedUnits = new Stack<GameObject>();
         objects = GameObject.FindWithTag("Placer").GetComponent<PlaceUnitController>().objectList;

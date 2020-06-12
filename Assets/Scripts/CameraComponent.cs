@@ -23,6 +23,7 @@ public class CameraComponent : MonoBehaviour
 
     private void LateUpdate()
     {
+        
         if (Input.GetAxis("Mouse ScrollWheel") > 0f)
         {
             if (camera.orthographicSize > 3f)
@@ -30,7 +31,7 @@ public class CameraComponent : MonoBehaviour
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {
-            if (camera.orthographicSize < 15f)
+            if (camera.orthographicSize < 30f)
                 camera.orthographicSize += 1f;
         }
         // else if (Input.mousePosition.x >= Screen.width - delta)
@@ -58,4 +59,6 @@ public class CameraComponent : MonoBehaviour
 
         return direction;
     }
+
+    
 }

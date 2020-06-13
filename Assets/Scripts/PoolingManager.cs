@@ -69,4 +69,9 @@ public class PoolingManager : MonoBehaviour
             _listOfObjects[i].SetActive(false);
         }
     }
+
+    public void CheckObjectOccursOnGrid(int gridLocation)
+    {
+
+    }
 }

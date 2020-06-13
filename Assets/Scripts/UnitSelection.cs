@@ -23,6 +23,7 @@ public class UnitSelection : MonoBehaviour
         selectedUnits = new Stack<GameObject>();
         objects = GameObject.FindWithTag("Placer").GetComponent<PlaceUnitController>().objectList;
         SelectionImage.gameObject.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -78,7 +79,7 @@ public class UnitSelection : MonoBehaviour
 
         if (Input.GetKey(KeyCode.S))
         {
-            List<Vector2> locs = PlaceUnitController.grid.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
+            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
             PlaceUnitController.PassToBuilders(locs);
             
         }
@@ -90,7 +91,6 @@ public class UnitSelection : MonoBehaviour
 
                 if (unitPos.x > min.x && unitPos.x < max.x && unitPos.y > min.y && unitPos.y < max.y)
                 {
-                    Debug.Log(ob.transform.position);
                     selectedUnits.Push(ob);
                     ob.GetComponent<SpriteRenderer>().color = new Color(0, 250, 248);
                 }

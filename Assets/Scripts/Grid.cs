@@ -2,10 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditorInternal;
 using UnityEngine;
+
+struct GridLoc
+{
+    public int x;
+    public int y;
+
+    public GridLoc(int x , int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
 
 public class Grid 
 {
+    private static Grid _istance;
+    public static Grid Instance
+    {
+        get
+        {
+            if(_istance == null)
+                Debug.Log("Grid is null");
+
+            return _istance;
+        }
+    }
+    public static Dictionary<GameObject, Vector2> gridObjects = null;
     private int width;
     private int height;
     private float cellSize;
@@ -15,6 +40,8 @@ public class Grid
     // <T>
     public Grid(int width , int height, float cellSize)
     {
+        _istance = this;
+
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
@@ -43,6 +70,8 @@ public class Grid
     public List<Vector2> CheckSelectionArea(Vector2 min, Vector2 max)
     {
         List<Vector2> units = new List<Vector2>();
+        List<GridLoc> selectedBlocks = new List<GridLoc>();
+
         for (int w = 0; w < gridArray.GetLength(0); w++)
         {
             for (int h = 0; h < gridArray.GetLength(1); h++)
@@ -53,12 +82,22 @@ public class Grid
 
                 if (unitPos.x > min.x && unitPos.x < max.x && unitPos.y > min.y && unitPos.y < max.y)
                 {
+                    var block = new GridLoc(w, h);
                     units.Add(unitPos);
+                    selectedBlocks.Add(block);
                 }
             }
         }
-
+        foreach(var block in selectedBlocks)
+        {
+            Debug.Log(block.x + " " + block.y);
+        }
         return units;
 
+    }
+
+    public void TestMethod()
+    {
+        Debug.Log("test invoke");
     }
 }

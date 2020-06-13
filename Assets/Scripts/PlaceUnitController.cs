@@ -13,14 +13,12 @@ public class PlaceUnitController : MonoBehaviour
 
     public List<GameObject> objectList;
 
-    public static Grid grid;
-
     private GameObject TreeContainer;
 
     private void Awake()
     {
         TreeContainer = GameObject.Find("Trees");
-        grid = new Grid(64, 64, 1f);
+
     }
 
     public static void PassToBuilders(List<Vector2> units)

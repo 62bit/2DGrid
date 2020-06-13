@@ -13,7 +13,6 @@ public class WalkToTarget : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         _builderNPC = animator.gameObject.GetComponent<Builder>();
-        Debug.Log(_builderNPC.name);
 
         if (_builderNPC.units.Count == 0)
             _target = _home;

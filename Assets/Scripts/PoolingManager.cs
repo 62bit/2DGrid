@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 
@@ -8,8 +9,17 @@ public class PoolingManager : MonoBehaviour
     private static PoolingManager _instance;
 
     [SerializeField] private GameObject _block;
+    [SerializeField] private GameObject _tempSelectionBlock;
+    [SerializeField] private GameObject _tempSelectionBlockContainer;
     [SerializeField] private GameObject _objectContainer;
-    [SerializeField] public List<GameObject> _listOfObjects;
+
+    [SerializeField] private List<GameObject> _listOfTreeObjects;
+    [SerializeField] private List<GameObject> _listOfSelectionObjects;
+
+    private List<GameObject> _listAlreadyActiveSelectionObjts;
+
+    private int _selection_object_count = 0;
+
 
     private int counter = 0;
 
@@ -28,7 +38,7 @@ public class PoolingManager : MonoBehaviour
         _instance = this;
     }
 
-    public void GenerateBlocks(int numberOfBlocks)
+    public void GenerateBlocks(int numberOfBlocks, int numberOfSelectionBlock)
     {
         for(int i = 0; i < numberOfBlocks; i++)
         {
@@ -36,7 +46,18 @@ public class PoolingManager : MonoBehaviour
             nBlock.transform.name = "block " + (++counter).ToString();
             nBlock.transform.SetParent(_objectContainer.transform);
             nBlock.SetActive(false);
-            _listOfObjects.Add(nBlock);
+            _listOfTreeObjects.Add(nBlock);
+        }
+
+
+        for(int i = 0; i < numberOfSelectionBlock; i++)
+        {
+            var tBlock = Instantiate(_tempSelectionBlock);
+            tBlock.transform.name = "selectionBlock" + (++_selection_object_count).ToString();
+            tBlock.SetActive(false);
+            tBlock.transform.SetParent(_tempSelectionBlockContainer.transform);
+            _listOfSelectionObjects.Add(tBlock);
+
         }
 
     }
@@ -44,7 +65,7 @@ public class PoolingManager : MonoBehaviour
     public GameObject RequestBlock()
     {
 
-        foreach(var block in _listOfObjects)
+        foreach(var block in _listOfTreeObjects)
         {
             if(block.activeInHierarchy == false)
             {
@@ -57,21 +78,67 @@ public class PoolingManager : MonoBehaviour
         tBlock.transform.name = "block " + (++counter).ToString();
         tBlock.SetActive(true);
         tBlock.transform.SetParent(_objectContainer.transform);
-        _listOfObjects.Add(tBlock);
+        _listOfTreeObjects.Add(tBlock);
         return tBlock;
+    }
+
+    public GameObject RequestSelectionBlock(Vector2 loc)
+    {
+        foreach(var block in _listOfSelectionObjects)
+        {
+            if(!block.activeInHierarchy)
+            {
+                block.SetActive(true);
+                block.transform.position = loc;
+                return block;
+            }
+
+        }
+
+        var b = Instantiate(_tempSelectionBlock);
+        b.transform.position = loc;
+        b.transform.SetParent(_tempSelectionBlockContainer.transform);
+        b.transform.name = "selectionBlock" + (++_selection_object_count).ToString();
+        _listOfSelectionObjects.Add(b);
+        return b;
+
+    }
+
+    public void RequestBlock(List<Vector2> locations)
+    {
+        foreach(var loc in locations)
+        {
+            if(!_listAlreadyActiveSelectionObjts.Contains(loc))
+            {
+
+            }
+
+            foreach(var block in _listAlreadyActiveSelectionObjts)
+            {
+                if(block.transform.position != (Vector3)loc)
+                {
+                    RequestSelectionBlock(loc);
+                }
+            }
+        }
     }
 
     public void PutBactToPull(int numberOfBlocks)
     {
         //TODO : get blocks according to params then deactive
-        for(int i = 0; i<numberOfBlocks; i++)
+        for(int i = 0; i < numberOfBlocks; i++)
         {
-            _listOfObjects[i].SetActive(false);
+            _listOfTreeObjects[i].SetActive(false);
         }
     }
 
-    public void CheckObjectOccursOnGrid(int gridLocation)
+    public void DeactivateSelectionBlocs()
     {
-
+        foreach(var block in _listOfSelectionObjects)
+        {
+            block.SetActive(false);
+        }
     }
+
+
 }

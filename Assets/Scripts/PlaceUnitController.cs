@@ -9,6 +9,7 @@ using UnityEngine.Experimental.Rendering;
 public class PlaceUnitController : MonoBehaviour
 {
     [SerializeField] private GameObject placeableObjectPrefab;
+    [SerializeField] private GameObject tempSelectionBlock;
     [SerializeField] private KeyCode hotKey;
 
     public List<GameObject> objectList;
@@ -52,5 +53,10 @@ public class PlaceUnitController : MonoBehaviour
     {
         var tree = Instantiate(placeableObjectPrefab, pos, Quaternion.identity);
         tree.transform.SetParent(TreeContainer.transform);
+    }
+    
+    public void PlaceObjectTemp(Vector2 pos)
+    {
+        var temp = Instantiate(tempSelectionBlock, pos, Quaternion.identity);
     }
 }

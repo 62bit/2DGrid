@@ -88,16 +88,13 @@ public class Grid
                 }
             }
         }
-        foreach(var block in selectedBlocks)
-        {
-            Debug.Log(block.x + " " + block.y);
-        }
+        //foreach(var block in selectedBlocks)
+        //{
+        //    Debug.Log(block.x + " " + block.y);
+        //}
         return units;
 
     }
 
-    public void TestMethod()
-    {
-        Debug.Log("test invoke");
-    }
+
 }

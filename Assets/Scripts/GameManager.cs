@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _istance;
+
     public static GameManager Instance
     {
         get
@@ -34,14 +35,16 @@ public class GameManager : MonoBehaviour
 
         BuilderContainer = GameObject.Find("Builders");
         builders = new List<Builder>();
-        for (int i = 0; i < BuilderCount; i++)
+        for(int i = 0; i < BuilderCount; i++)
         {
             SpawnBuilder(new Vector2(0f, 0f));
         }
-        PoolingManager.Instance.GenerateBlocks(poolObjectCount);
-
+        
     }
-
+    private void Start()
+    {
+        PoolingManager.Instance.GenerateBlocks(poolObjectCount, 30);
+    }
     private void SpawnBuilder(Vector2 pos)
     {
         count++;

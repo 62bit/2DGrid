@@ -82,7 +82,7 @@ public class PoolingManager : MonoBehaviour
         return tBlock;
     }
 
-    public GameObject RequestSelectionBlock(Vector2 loc)
+    public void RequestSelectionBlock(Vector2 loc)
     {
         foreach(var block in _listOfSelectionObjects)
         {
@@ -90,7 +90,7 @@ public class PoolingManager : MonoBehaviour
             {
                 block.SetActive(true);
                 block.transform.position = loc;
-                return block;
+                return;
             }
 
         }
@@ -100,40 +100,14 @@ public class PoolingManager : MonoBehaviour
         b.transform.SetParent(_tempSelectionBlockContainer.transform);
         b.transform.name = "selectionBlock" + (++_selection_object_count).ToString();
         _listOfSelectionObjects.Add(b);
-        return b;
 
     }
 
-    public void RequestBlock(List<Vector2> locations)
-    {
-        foreach(var loc in locations)
-        {
-            if(!_listAlreadyActiveSelectionObjts.Contains(loc))
-            {
 
-            }
-
-            foreach(var block in _listAlreadyActiveSelectionObjts)
-            {
-                if(block.transform.position != (Vector3)loc)
-                {
-                    RequestSelectionBlock(loc);
-                }
-            }
-        }
-    }
-
-    public void PutBactToPull(int numberOfBlocks)
-    {
-        //TODO : get blocks according to params then deactive
-        for(int i = 0; i < numberOfBlocks; i++)
-        {
-            _listOfTreeObjects[i].SetActive(false);
-        }
-    }
 
     public void DeactivateSelectionBlocs()
     {
+        //Fix this 
         foreach(var block in _listOfSelectionObjects)
         {
             block.SetActive(false);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -19,6 +20,13 @@ public class UnitSelection : MonoBehaviour
 
     
     private List<Vector2> selectedBlocks = new List<Vector2>();
+
+    //Min Max from prewious frame
+    private Vector2 _min = new Vector2();
+    private Vector2 _max = new Vector2();
+
+    //Placed Selection Blocks
+    private List<Vector2> _selectionBlocks = new List<Vector2>();
 
     // Start is called before the first frame update
     void Start()
@@ -52,10 +60,6 @@ public class UnitSelection : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Q))
         {
             PoolingManager.Instance.RequestBlock();
-        }
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            PoolingManager.Instance.PutBactToPull(5);
         }
 
         //if(Input.GetMouseButtonDown(1))
@@ -121,16 +125,38 @@ public class UnitSelection : MonoBehaviour
         }
 
         selectedBlocks.Clear();
+        _selectionBlocks.Clear();
         PoolingManager.Instance.DeactivateSelectionBlocs();
 
     }
 
     private void OnSelection()
     {
-        if(selectedBlocks.Count > 0)
+        Vector2 min = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
+        Vector2 max = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
+
+        if(max != _max | min != _min)
         {
-            PoolingManager.Instance.RequestBlock(selectedBlocks);
+            Debug.Log(min + " " + max);
+
+            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
+            Debug.Log(locs.Count);
+            if(_selectionBlocks != locs)
+            {
+                Debug.Log(locs.Count);
+                foreach(var block in locs.Except(_selectionBlocks).ToList())
+                {
+                    PoolingManager.Instance.RequestSelectionBlock(block);
+                    _selectionBlocks.Add(block);
+                    
+                }
+            }
+
+           
+            _min = min;
+            _max = max;
         }
+
     }
 
 }

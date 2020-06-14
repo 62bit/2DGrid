@@ -52,6 +52,7 @@ public class PlaceUnitController : MonoBehaviour
     public void PlaceObject(Vector2 pos)
     {
         var tree = Instantiate(placeableObjectPrefab, pos, Quaternion.identity);
+        Grid.Instance.gridObjects.Add(tree, pos);
         tree.transform.SetParent(TreeContainer.transform);
     }
     

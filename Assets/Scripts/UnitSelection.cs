@@ -126,7 +126,7 @@ public class UnitSelection : MonoBehaviour
 
         selectedBlocks.Clear();
         _selectionBlocks.Clear();
-        PoolingManager.Instance.DeactivateSelectionBlocs();
+        PoolingManager.Instance.DeactivateSelectionBlocks();
 
     }
 
@@ -135,21 +135,31 @@ public class UnitSelection : MonoBehaviour
         Vector2 min = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
         Vector2 max = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
 
-        if(max != _max | min != _min)
+        if(max != _max || min != _min)
         {
-            Debug.Log(min + " " + max);
-
             List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
-            Debug.Log(locs.Count);
+
             if(_selectionBlocks != locs)
             {
-                Debug.Log(locs.Count);
-                foreach(var block in locs.Except(_selectionBlocks).ToList())
+                if(_selectionBlocks.Count < locs.Count)
                 {
-                    PoolingManager.Instance.RequestSelectionBlock(block);
-                    _selectionBlocks.Add(block);
-                    
+                    foreach(var block in locs.Except(_selectionBlocks).ToList())
+                    {
+                        PoolingManager.Instance.RequestSelectionBlock(block);
+                        _selectionBlocks.Add(block);
+
+                    }
                 }
+                else
+                {
+                    foreach(var block in _selectionBlocks.Except(locs).ToList())
+                    {
+                        PoolingManager.Instance.PutBackSelectionBlock(block);
+                        _selectionBlocks.Remove(block);
+
+                    }
+                }
+                PaintSelectionBlocks(Grid.Instance.ValidateArea(locs));
             }
 
            
@@ -159,4 +169,22 @@ public class UnitSelection : MonoBehaviour
 
     }
 
+
+    private void PaintSelectionBlocks(bool check)
+    {
+        if(!check)
+        {
+            foreach(var o in PoolingManager.Instance._listAlreadyActiveSelectionObjts)
+            {
+                o.GetComponent<SpriteRenderer>().color = Color.red;
+            }
+        }
+        else
+        {
+            foreach(var o in PoolingManager.Instance._listAlreadyActiveSelectionObjts)
+            {
+                o.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
+    }
 }

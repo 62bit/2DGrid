@@ -30,7 +30,7 @@ public class Grid
             return _istance;
         }
     }
-    public static Dictionary<GameObject, Vector2> gridObjects = null;
+    public Dictionary<GameObject, Vector2> gridObjects = new Dictionary<GameObject, Vector2>();
     private int width;
     private int height;
     private float cellSize;
@@ -95,6 +95,14 @@ public class Grid
         return units;
 
     }
-
-
+    
+    public bool ValidateArea(List<Vector2> locations)
+    {
+        foreach(var loc in locations)
+        {
+            if(gridObjects.ContainsValue(loc))
+                return false;
+        }
+        return true;
+    }
 }

@@ -16,7 +16,7 @@ public class PoolingManager : MonoBehaviour
     [SerializeField] private List<GameObject> _listOfTreeObjects;
     [SerializeField] private List<GameObject> _listOfSelectionObjects;
 
-    private List<GameObject> _listAlreadyActiveSelectionObjts;
+    public List<GameObject> _listAlreadyActiveSelectionObjts = new List<GameObject>();
 
     private int _selection_object_count = 0;
 
@@ -90,6 +90,7 @@ public class PoolingManager : MonoBehaviour
             {
                 block.SetActive(true);
                 block.transform.position = loc;
+                _listAlreadyActiveSelectionObjts.Add(block);
                 return;
             }
 
@@ -100,14 +101,24 @@ public class PoolingManager : MonoBehaviour
         b.transform.SetParent(_tempSelectionBlockContainer.transform);
         b.transform.name = "selectionBlock" + (++_selection_object_count).ToString();
         _listOfSelectionObjects.Add(b);
+        _listAlreadyActiveSelectionObjts.Add(b);
 
     }
 
-
-
-    public void DeactivateSelectionBlocs()
+    public void PutBackSelectionBlock(Vector2 block)
     {
-        //Fix this 
+        foreach(var b in _listAlreadyActiveSelectionObjts.ToArray())
+        {
+            if(b.transform.position == (Vector3)block)
+            {
+                b.SetActive(false);
+                _listAlreadyActiveSelectionObjts.Remove(b);
+            }
+        }
+    }
+
+    public void DeactivateSelectionBlocks()
+    {
         foreach(var block in _listOfSelectionObjects)
         {
             block.SetActive(false);

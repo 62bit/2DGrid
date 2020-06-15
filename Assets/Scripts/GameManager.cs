@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -43,7 +42,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        PoolingManager.Instance.GenerateBlocks(poolObjectCount, 30);
+        PoolingManager.Instance.GenerateBlocks(poolObjectCount, 200);
     }
     private void SpawnBuilder(Vector2 pos)
     {

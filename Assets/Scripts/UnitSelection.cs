@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 
 public class UnitSelection : MonoBehaviour
 {
@@ -28,6 +25,10 @@ public class UnitSelection : MonoBehaviour
     //Placed Selection Blocks
     private List<Vector2> _selectionBlocks = new List<Vector2>();
 
+    //Min max used in methods called in Update()
+    Vector2 _hotMin = new Vector2();
+    Vector2 _hotMax = new Vector2();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +43,6 @@ public class UnitSelection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if(Input.GetMouseButtonDown(0))
         {
             startPos = Input.mousePosition;
@@ -61,12 +61,6 @@ public class UnitSelection : MonoBehaviour
         {
             PoolingManager.Instance.RequestBlock();
         }
-
-        //if(Input.GetMouseButtonDown(1))
-        //{
-        //    List<Vector2> locs = new List<Vector2> { new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f) };
-        //    PoolingManager.Instance.RequestSelectionBlock(locs);
-        //}
     }
 
     private void StartSelection(Vector2 currentMousePos)
@@ -86,28 +80,32 @@ public class UnitSelection : MonoBehaviour
 
         SelectionImage.sizeDelta = new Vector2(Mathf.Abs(widgt), Mathf.Abs(heigth));
 
-        Vector2 min = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
-        Vector2 max = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
+        _hotMin = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
+        _hotMax = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
 
-        List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
-        foreach(var loc in locs)
+        if(_hotMax != _max || _hotMin != _min)
         {
-            if(!selectedBlocks.Contains(loc))
+            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(_hotMin), Camera.main.ScreenToWorldPoint(_hotMax));
+            foreach(var loc in locs)
             {
-                selectedBlocks.Add(loc);
+                if(!selectedBlocks.Contains(loc))
+                {
+                    selectedBlocks.Add(loc);
+                }
             }
         }
+        
     }
 
     private void ReleaseSelectionBox()
     {
         SelectionImage.gameObject.SetActive(false);
-        Vector2 min = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
-        Vector2 max = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
+        _hotMin = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
+        _hotMax = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
 
         if(Input.GetKey(KeyCode.S))
         {
-            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
+            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(_hotMin), Camera.main.ScreenToWorldPoint(_hotMax));
             PlaceUnitController.PassToBuilders(locs);
         }
         else
@@ -116,7 +114,7 @@ public class UnitSelection : MonoBehaviour
             {
                 Vector3 unitPos = Camera.main.WorldToScreenPoint(ob.transform.position);
 
-                if(unitPos.x > min.x && unitPos.x < max.x && unitPos.y > min.y && unitPos.y < max.y)
+                if(unitPos.x > _hotMin.x && unitPos.x < _hotMax.x && unitPos.y > _hotMin.y && unitPos.y < _hotMax.y)
                 {
                     selectedUnits.Push(ob);
                     ob.GetComponent<SpriteRenderer>().color = new Color(0, 250, 248);
@@ -132,12 +130,12 @@ public class UnitSelection : MonoBehaviour
 
     private void OnSelection()
     {
-        Vector2 min = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
-        Vector2 max = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
+        _hotMax = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
+        _hotMin = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
 
-        if(max != _max || min != _min)
+        if(_hotMax != _max || _hotMin != _min)
         {
-            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(min), Camera.main.ScreenToWorldPoint(max));
+            List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(_hotMin), Camera.main.ScreenToWorldPoint(_hotMax));
 
             if(_selectionBlocks != locs)
             {
@@ -163,8 +161,8 @@ public class UnitSelection : MonoBehaviour
             }
 
            
-            _min = min;
-            _max = max;
+            _min = _hotMin;
+            _max = _hotMax;
         }
 
     }

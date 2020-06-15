@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
+
 
 public class PoolingManager : MonoBehaviour
 {
@@ -57,7 +55,6 @@ public class PoolingManager : MonoBehaviour
             tBlock.SetActive(false);
             tBlock.transform.SetParent(_tempSelectionBlockContainer.transform);
             _listOfSelectionObjects.Add(tBlock);
-
         }
 
     }

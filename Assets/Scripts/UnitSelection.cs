@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,7 +16,7 @@ public class UnitSelection : MonoBehaviour
 
     private bool isSelectionObjectsPlaced = false;
 
-    
+
     private List<Vector2> selectedBlocks = new List<Vector2>();
 
     //Min Max from prewious frame
@@ -43,21 +44,21 @@ public class UnitSelection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             startPos = Input.mousePosition;
         }
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             StartSelection(Input.mousePosition);
             OnSelection();
         }
 
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             ReleaseSelectionBox();
         }
-        if(Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             PoolingManager.Instance.RequestBlock();
         }
@@ -65,12 +66,12 @@ public class UnitSelection : MonoBehaviour
 
     private void StartSelection(Vector2 currentMousePos)
     {
-        for(int i = 0; i < selectedUnits.Count; i++)
+        for (int i = 0; i < selectedUnits.Count; i++)
         {
             selectedUnits.Pop().GetComponent<SpriteRenderer>().color = Color.white;
         }
 
-        if(!SelectionImage.gameObject.activeInHierarchy)
+        if (!SelectionImage.gameObject.activeInHierarchy)
             SelectionImage.gameObject.SetActive(true);
 
         float widgt = currentMousePos.x - startPos.x;
@@ -83,18 +84,18 @@ public class UnitSelection : MonoBehaviour
         _hotMin = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
         _hotMax = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
 
-        if(_hotMax != _max || _hotMin != _min)
+        if (_hotMax != _max || _hotMin != _min)
         {
             List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(_hotMin), Camera.main.ScreenToWorldPoint(_hotMax));
-            foreach(var loc in locs)
+            foreach (var loc in locs)
             {
-                if(!selectedBlocks.Contains(loc))
+                if (!selectedBlocks.Contains(loc))
                 {
                     selectedBlocks.Add(loc);
                 }
             }
         }
-        
+
     }
 
     private void ReleaseSelectionBox()
@@ -103,18 +104,18 @@ public class UnitSelection : MonoBehaviour
         _hotMin = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
         _hotMax = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
 
-        if(Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
             List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(_hotMin), Camera.main.ScreenToWorldPoint(_hotMax));
             PlaceUnitController.PassToBuilders(locs);
         }
         else
         {
-            foreach(var ob in objects)
+            foreach (var ob in objects)
             {
                 Vector3 unitPos = Camera.main.WorldToScreenPoint(ob.transform.position);
 
-                if(unitPos.x > _hotMin.x && unitPos.x < _hotMax.x && unitPos.y > _hotMin.y && unitPos.y < _hotMax.y)
+                if (unitPos.x > _hotMin.x && unitPos.x < _hotMax.x && unitPos.y > _hotMin.y && unitPos.y < _hotMax.y)
                 {
                     selectedUnits.Push(ob);
                     ob.GetComponent<SpriteRenderer>().color = new Color(0, 250, 248);
@@ -133,15 +134,15 @@ public class UnitSelection : MonoBehaviour
         _hotMax = SelectionImage.anchoredPosition + (SelectionImage.sizeDelta / 2);
         _hotMin = SelectionImage.anchoredPosition - (SelectionImage.sizeDelta / 2);
 
-        if(_hotMax != _max || _hotMin != _min)
+        if (_hotMax != _max || _hotMin != _min)
         {
             List<Vector2> locs = Grid.Instance.CheckSelectionArea(Camera.main.ScreenToWorldPoint(_hotMin), Camera.main.ScreenToWorldPoint(_hotMax));
 
-            if(_selectionBlocks != locs)
+            if (_selectionBlocks != locs)
             {
-                if(_selectionBlocks.Count < locs.Count)
+                if (_selectionBlocks.Count < locs.Count)
                 {
-                    foreach(var block in locs.Except(_selectionBlocks).ToList())
+                    foreach (var block in locs.Except(_selectionBlocks).ToList())
                     {
                         PoolingManager.Instance.RequestSelectionBlock(block);
                         _selectionBlocks.Add(block);
@@ -150,7 +151,7 @@ public class UnitSelection : MonoBehaviour
                 }
                 else
                 {
-                    foreach(var block in _selectionBlocks.Except(locs).ToList())
+                    foreach (var block in _selectionBlocks.Except(locs).ToList())
                     {
                         PoolingManager.Instance.PutBackSelectionBlock(block);
                         _selectionBlocks.Remove(block);
@@ -160,7 +161,7 @@ public class UnitSelection : MonoBehaviour
                 PaintSelectionBlocks(Grid.Instance.ValidateArea(locs));
             }
 
-           
+
             _min = _hotMin;
             _max = _hotMax;
         }
@@ -170,19 +171,20 @@ public class UnitSelection : MonoBehaviour
 
     private void PaintSelectionBlocks(bool check)
     {
-        if(!check)
+        if (!check)
         {
-            foreach(var o in PoolingManager.Instance._listAlreadyActiveSelectionObjts)
+            foreach (var o in PoolingManager.Instance._listAlreadyActiveSelectionObjts)
             {
                 o.GetComponent<SpriteRenderer>().color = Color.red;
             }
         }
         else
         {
-            foreach(var o in PoolingManager.Instance._listAlreadyActiveSelectionObjts)
+            foreach (var o in PoolingManager.Instance._listAlreadyActiveSelectionObjts)
             {
                 o.GetComponent<SpriteRenderer>().color = Color.white;
             }
         }
     }
+
 }

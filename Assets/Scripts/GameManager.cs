@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,18 +11,19 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if(_istance == null)
+            if (_istance == null)
                 Debug.Log("Game Manager null Instance");
 
             return _istance;
         }
     }
 
-    public static List<Builder> builders;
+    public List<Builder> builders;
 
     [SerializeField] private int BuilderCount;
     [SerializeField] private GameObject BuilderPrefab;
     [SerializeField] private int poolObjectCount;
+    [SerializeField] private List<GameObject> _bHomes;
     private GameObject BuilderContainer;
 
     //Grid Initialization
@@ -31,24 +33,33 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         _istance = this;
-
-        BuilderContainer = GameObject.Find("Builders");
-        builders = new List<Builder>();
-        for(int i = 0; i < BuilderCount; i++)
-        {
-            SpawnBuilder(new Vector2(0f, 0f));
-        }
         
     }
     private void Start()
     {
         PoolingManager.Instance.GenerateBlocks(poolObjectCount, 200);
+        foreach(var home in _bHomes)
+        {
+            var builder = SpawnBuilder();
+            var builderID = builder.GetComponent<Builder>().GetID();
+            foreach(var h2 in _bHomes)
+            {
+                if(builderID == h2.GetComponent<BuildersHome>()._builderID)
+                {
+                    builder.GetComponent<Builder>()._home = h2;
+                    builder.transform.position = h2.transform.position;
+                }
+            }
+        }
+
     }
-    private void SpawnBuilder(Vector2 pos)
+    private GameObject SpawnBuilder()
     {
         count++;
-        var builder = Instantiate(BuilderPrefab, pos, Quaternion.identity);
+        var builder = Instantiate(BuilderPrefab, Vector2.zero, Quaternion.identity);
         builder.name = "B" + count.ToString();
-        builder.transform.SetParent(BuilderContainer.transform);
+        return builder;
     }
+
+    
 }

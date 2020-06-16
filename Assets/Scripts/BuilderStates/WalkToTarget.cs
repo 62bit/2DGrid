@@ -7,7 +7,6 @@ public class WalkToTarget : StateMachineBehaviour
 {
     private Vector3 _target;
     private Builder _builderNPC;
-    public static Vector3 _home = new Vector3(0f, 0f, 0f);
 
     //OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -15,7 +14,7 @@ public class WalkToTarget : StateMachineBehaviour
         _builderNPC = animator.gameObject.GetComponent<Builder>();
 
         if (_builderNPC.units.Count == 0)
-            _target = _home;
+            _target = _builderNPC._home.transform.position;
         else
         {
             _target = _builderNPC.units.Peek();
@@ -29,12 +28,12 @@ public class WalkToTarget : StateMachineBehaviour
         float step = _builderNPC.speed * Time.deltaTime;
         _builderNPC.transform.position = Vector3.MoveTowards(_builderNPC.transform.position, _target, step);
 
-        if (_builderNPC.transform.position == _target & _target != _home)
+        if (_builderNPC.transform.position == _target & _target != _builderNPC._home.transform.position)
         {
             animator.SetBool("isBuilding", true);
             animator.SetBool("isWalking", false);
         }
-        else if (_builderNPC.transform.position == _home)
+        else if (_builderNPC.transform.position == _builderNPC._home.transform.position)
         {
             animator.SetBool("isWaiting", true);
             animator.SetBool("isWalking", false);

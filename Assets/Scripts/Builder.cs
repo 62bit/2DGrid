@@ -15,7 +15,9 @@ public static class BuilderID
 
 public class Builder : MonoBehaviour
 {
-    private int ID;
+    [SerializeField] private int ID;
+    public GameObject _home;
+
     private BuilderComp baseBuilder;
     public float buildingTime;
     public Vector3 destination = new Vector3();
@@ -23,17 +25,38 @@ public class Builder : MonoBehaviour
     public Queue<Vector2> units = new Queue<Vector2>();
 
 
-    private void Start()
+    private void Awake()
     {
         baseBuilder = new BuilderComp(Random.Range(1, 5), Random.Range(1, 6));
         InitBuilder();
-        ID = BuilderID.GrabID();
-        GameManager.builders.Add(this);
+        this.ID = BuilderID.GrabID();
+        GameManager.Instance.builders.Add(this);
     }
 
     private void InitBuilder()
     {
         buildingTime = baseBuilder.GetBuildingTime();
         speed = baseBuilder.GetSpeed();
+    }
+
+    public int GetID()
+    {
+        return this.ID;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject == _home)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject == _home)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 }

@@ -6,21 +6,21 @@ struct GridLoc
     public int x;
     public int y;
 
-    public GridLoc(int x , int y)
+    public GridLoc(int x, int y)
     {
         this.x = x;
         this.y = y;
     }
 }
 
-public class Grid 
+public class Grid
 {
     private static Grid _istance;
     public static Grid Instance
     {
         get
         {
-            if(_istance == null)
+            if (_istance == null)
                 Debug.Log("Grid is null");
 
             return _istance;
@@ -34,7 +34,7 @@ public class Grid
     private int[,] gridArray;
 
     // <T>
-    public Grid(int width , int height, float cellSize)
+    public Grid(int width, int height, float cellSize)
     {
         _istance = this;
 
@@ -52,7 +52,7 @@ public class Grid
         //        Debug.DrawLine(GetCellCoorToWorld(i, a), GetCellCoorToWorld(i, a + 1), Color.white, 100f);
         //        Debug.DrawLine(GetCellCoorToWorld(i, a), GetCellCoorToWorld(i + 1, a), Color.white, 100f);
         //    }
-            
+
         //}
         //Debug.DrawLine(GetCellCoorToWorld(0, height), GetCellCoorToWorld(width, height), Color.white, 100f);
         //Debug.DrawLine(GetCellCoorToWorld(width, 0), GetCellCoorToWorld(width, height), Color.white, 100f);
@@ -65,8 +65,10 @@ public class Grid
 
     public List<Vector2> CheckSelectionArea(Vector2 min, Vector2 max)
     {
+        //Can be cashed
         List<Vector2> units = new List<Vector2>();
         List<GridLoc> selectedBlocks = new List<GridLoc>();
+        //-
 
         for (int w = 0; w < gridArray.GetLength(0); w++)
         {
@@ -91,12 +93,12 @@ public class Grid
         return units;
 
     }
-    
+
     public bool ValidateArea(List<Vector2> locations)
     {
-        foreach(var loc in locations)
+        foreach (var loc in locations)
         {
-            if(gridObjects.ContainsValue(loc))
+            if (gridObjects.ContainsValue(loc))
                 return false;
         }
         return true;

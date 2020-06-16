@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlaceUnitController : MonoBehaviour
 {
+
     [SerializeField] private GameObject placeableObjectPrefab;
     [SerializeField] private GameObject tempSelectionBlock;
     [SerializeField] private KeyCode hotKey;
@@ -23,9 +24,9 @@ public class PlaceUnitController : MonoBehaviour
     {
         int unitsPerBuilder = Math.Abs(units.Count / BuilderID.ReturnID());
         int counter = 0;
-        foreach (var builder in GameManager.builders)
+        foreach (var builder in GameManager.Instance.builders)
         {
-            if (GameManager.builders.IndexOf(builder) != GameManager.builders.Count - 1)
+            if (GameManager.Instance.builders.IndexOf(builder) != GameManager.Instance.builders.Count - 1)
             {
                 for (int i = 0; i < unitsPerBuilder; i++)
                 {
@@ -52,7 +53,7 @@ public class PlaceUnitController : MonoBehaviour
         Grid.Instance.gridObjects.Add(tree, pos);
         tree.transform.SetParent(TreeContainer.transform);
     }
-    
+
     public void PlaceObjectTemp(Vector2 pos)
     {
         var temp = Instantiate(tempSelectionBlock, pos, Quaternion.identity);

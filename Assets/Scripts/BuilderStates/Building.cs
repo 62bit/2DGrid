@@ -23,7 +23,7 @@ public class Building : StateMachineBehaviour
         _startTime = Time.deltaTime;
 
         if(_builderNPC.units.Count == 0)
-            _target = WalkToTarget._home;
+            _target = _builderNPC._home.transform.position;
         else
         {
             _target = _builderNPC.units.Dequeue();
